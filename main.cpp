@@ -12,14 +12,14 @@ class shopping
     float discount;
     
   public:
-    void menu(); //done->26
-    void administrator(); //done->
-    void buyer(); //done->
-    void add(); //done->
-    void edit(); //done->
-    void rem(); //done->
-    void list(); //done->
-    void receipt(); //done->
+    void menu(); 
+    void administrator(); 
+    void buyer(); 
+    void add(); 
+    void edit(); 
+    void rem(); 
+    void list(); 
+    void receipt(); 
     
 };
 
@@ -165,7 +165,7 @@ void shopping:: buyer()
 void shopping:: add()
 {
     m:
-    fstream data;
+    fstream data; // Creating object of fstream class
     int c;
     int token=0;
     float p;
@@ -181,39 +181,46 @@ void shopping:: add()
     cin>>price;
     cout<<"\n\n\t Discount on product ";
     cin>>discount;
-    
-    data.open("database.txt", ios::in);
-    
-    if(!data)
+    //as product will be added by admin so it need to be stored somewhere and for that we'll open the file.
+    data.open("database.txt", ios::in); // we are opening the file "database.txt" in reading mode (ios::in open the file in reading mode)
+     
+    if(!data) //if this doesn't exist
     {
+        /*ios::app stands for append mode and ios::out stands for writing mode, which means if there is no such file with given name then file with this name will be created(appended) or will be opened in writting mode.
+        */
         data.open("database.txt", ios::app|ios::out);
+      
+        // to write in file "database.txt", with the help of object data
         data<<" "<<pcode<<" "<<pname<<" "<<price<<" "<<discount<<"\n";
-        data.close();
+        data.close(); //for closing the file
     }
-    else
+    else //if file exist
     {
-        data>>c>>n>>p>>d;
+        data>>c>>n>>p>>d; //to read from file, here we are initiallizing the index of file to iterate on the file using while loop
         
-        while(!data.eof())
+        while(!data.eof()) // eof() -> end of file function, to check if data of file is not ended and till then we'll interate over the file
         {
-            if(c==pcode)
+            if(c==pcode) // if entered pcode matches with any code inside the file, then it will be marked with token++
             {
                 token++;
                 
             }
-            data>>c>>n>>p>>d;
+            data>>c>>n>>p>>d; //for iteration purpose we are reading from the file
         }
-        data.close();
+        data.close(); //close the file
         
         
         
         
-        if(token==1)
-            goto m;
-        else{
-            data.open("database.txt", ios::app|ios::out);
-            data<<" "<<pcode<<" "<<pname<<" "<<price<<" "<<discount<<"\n";
-            data.close();    
+        if(token==1) //if there is duplicacy, which means product code entered by admin already exist
+            goto m; //goto add function again and add another product with different product code
+        else{ //product code entered by admin is unique
+            // add that product in file
+            data.open("database.txt", ios::app|ios::out); // if there is file with given name then append this data inside the file or open a new file with this name in writting mode
+          
+            // to write in file "database.txt", with the help of object data
+            data<<" "<<pcode<<" "<<pname<<" "<<price<<" "<<discount<<"\n"; 
+            data.close();    //close file
             
         }
         cout<<"\n\n\t\t Record inserted !";
@@ -234,19 +241,19 @@ void shopping::edit()
     cout<<"\n\t\t\t Product code :";
     cin>>pkey;
     
-    data.open("database.txt", ios::in);
-    if(!data)
+    data.open("database.txt", ios::in); // we are opening the file "database.txt" in reading mode (ios::in open the file in reading mode)
+    if(!data) // if File doesn't exist
     {
         cout<<"\n\nFile doesn't exist !";
     }
     else{
         
-        data1.open("database.txt", ios::app|ios::out);
+        data1.open("database1.txt", ios::app|ios::out); // we are saving our edited data in this file
         
-        data>>pcode>>pname>>price>>discount;
+        data>>pcode>>pname>>price>>discount; // for interating in data , here we are initializing
         while(!data.eof())
         {
-            if(pkey==pcode)
+            if(pkey==pcode) // if entered code matches with code inside file database.txt
             {
                 cout<<"\n\t\t Product new code :";
                 cin>>c;
@@ -255,17 +262,17 @@ void shopping::edit()
                 cout<<"\n\t\t Price :";
                 cin>>p;
                 cout<<"\n\t\t Discount";
-                cin>>d;
-                data1<<" "<<c<<" "<<" "<<n<<" "<<p<<" "<<d<<"\n";
+                cin>>d; 
+                data1<<" "<<c<<" "<<" "<<n<<" "<<p<<" "<<d<<"\n"; //all the updated details will be saved in file database1.txt with the help of data1 object
                 cout<<"\n\n\t\t Record edited ";
-                token++;
+                token++; // to mark that record with this code exist in the file
             }
-            else
+            else // if this is not the entered product code
             {
-                data1<<" "<<pcode<<" "<<pname<<" "<<price<<" "<<discount<<"\n";
+                data1<<" "<<pcode<<" "<<pname<<" "<<price<<" "<<discount<<"\n"; // update data1 with with values of data.
                 
             }
-            data>>pcode>>pname>>price>>discount;
+            data>>pcode>>pname>>price>>discount;  // for interating in data
         }
         data.close();
         data1.close();
@@ -279,7 +286,7 @@ void shopping::edit()
         }
     }
     
-    
+    //making a copy of our database and while copying every line if our product code matchs with product code in file then in new database we'll write a edited line
     
 }
 void shopping:: rem()
@@ -291,7 +298,7 @@ void shopping:: rem()
     cout<<"\n\n\t Delete product";
     cout<<"\n\n\t Product code :";
     cin>>pkey;
-    data.open("database.txt", ios::in);
+    data.open("database.txt", ios::in); //open file in read mode
     if(!data)
     {
         cout<<"File doesn't exist";
@@ -299,7 +306,7 @@ void shopping:: rem()
     }
     
     else{
-        data1.open("database1.txt", ios::app|ios::out);
+        data1.open("database1.txt", ios::app|ios::out); //open file in read mode
         data>>pcode>>pname>>price>>discount;
         while(!data.eof())
         {
@@ -325,6 +332,8 @@ void shopping:: rem()
             cout<<"\n\n Record not found";
         }
     }
+  
+   //making a copy of our database and while copying every line if our product code matchs with product code in file then in new database we'll not write that line
 }
 
 void shopping::list()
